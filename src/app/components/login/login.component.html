@@ -1,0 +1,24 @@
+<mat-toolbar >
+    Secret<b>Storage</b> 
+    <span class="example-fill-remaining-space"></span>
+    <span>
+       <button (click)="goToRegister()" mat-stroked-button><b>Register</b></button>
+    </span>
+</mat-toolbar>
+
+<mat-card>
+    <div class="con">
+        <mat-card-title style="padding-bottom: 40px; margin-left: 42%; margin-right: 50%;">Login</mat-card-title>
+        <mat-card-content>
+             <mat-form-field>
+                <input autocomplete="off" type="text" [(ngModel)]="email" name="email" required matInput placeholder="Login">
+            </mat-form-field>
+            <mat-form-field>
+                <input autocomplete="off"  type="password" [(ngModel)]="password" name="password" required matInput placeholder="Password">
+            </mat-form-field>
+            <div class="button" style="padding-top: 20px;">
+                <button (click)="login()" style="width: 100%; background-color: transparent !important;" mat-stroked-button value="Submit" type="button">Login</button> 
+            </div>
+        </mat-card-content>
+    </div>
+</mat-card>

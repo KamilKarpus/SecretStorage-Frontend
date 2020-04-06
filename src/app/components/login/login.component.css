@@ -1,0 +1,30 @@
+.example-fill-remaining-space {
+   
+    flex: 1 1 auto !important;
+}
+
+mat-card {
+    width: 400px;
+    height: 370px;
+    display: flex;
+    justify-content: center;
+    margin: 80px auto;
+    position: relative;
+    background-color: #212121;
+    box-shadow: 0 0 8px #101010 !important;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.con {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+::ng-deep .snack-bar {
+    background-color: #c71414;
+    color: white;
+}

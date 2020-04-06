@@ -1,0 +1,63 @@
+<mat-toolbar >
+    Secret<b>Storage</b> 
+    <span class="example-fill-remaining-space"></span>
+    <span>
+        <!-- <button mat-flat-button><i style="font-size: 20px;" class="far fa-user"></i></button> -->
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <i style="font-size: 20px;" class="far fa-user"></i>
+        </button>
+        <mat-menu #menu="matMenu">
+            <span><p style="margin-left: 15px; margin-right: 15px; font-size: 10px;">Zalogowano jako:</p></span>
+            <span><p style="margin-left: 15px; margin-right: 15px; text-align: center;">{{displayName}}</p></span>
+            <mat-divider></mat-divider>
+            <button (click)="logout()" style="margin-left: 15px; margin-right: 15px; margin-top: 10px;" mat-stroked-button color="warn">
+              <span>Wyloguj</span>
+            </button>
+        </mat-menu>
+    </span>
+</mat-toolbar>
+
+<div style="margin:0 auto; width: 50%; padding-top: 20px;">
+    <h2 >Organizacje:</h2>
+</div>
+
+<mat-card style="margin:0 auto; width: 47.5%; padding-top: 50px;">
+    <div style="margin: 0 auto; width: 80%">
+        <p style="width: 100%">Dodaj nową organizację:</p>
+        <mat-form-field style="width: 70%;">
+            <input [(ngModel)]="organizationName" style="width: 100%" name="organizationName"  matInput placeholder="Nazwa organizacji:">
+        </mat-form-field>
+        <button (click)="addNewOrganization()" style="width: 18%; margin-top: 5px; margin-left: 15px;" mat-stroked-button value="Submit" type="button"><i class="fas fa-database"></i></button>
+    </div>
+</mat-card>
+
+<div class="mat-elevation-z8" style="margin:0 auto; width: 50%; margin-top: 20px;">
+    <table mat-table [dataSource]="dataSource" style="width: 100%;">
+  
+        <ng-container matColumnDef="organization">
+            <th mat-header-cell *matHeaderCellDef> Organizacja: </th>
+            <td mat-cell *matCellDef="let element"><button mat-button style="width: 100%;" type="button" routerLink='/organization/{{element.id}}'> {{element.name}}</button>  </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="options">
+            <th style="width: 80px;" mat-header-cell *matHeaderCellDef> Opcje: </th>
+            <td mat-cell *matCellDef="let element">
+                <button [disabled]="canDelete(element.id)" (click)="deleteOrg(element.id)" mat-stroked-button color="warn"><i class="fas fa-trash-alt"></i></button> 
+            </td>
+        </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator style="margin-bottom: 50px;"
+        [length]="length"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        [pageSize]="pageSize" 
+        (page)="pageEvent = handlePage($event)"
+        showFirstLastButtons
+        data-pagesize="pageSize"
+      >
+    </mat-paginator>
+</div>
