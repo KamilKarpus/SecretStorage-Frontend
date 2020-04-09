@@ -24,7 +24,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status == 401) {
+        if (err.status == 401 || err.status == 405) {
           
           return this.userService.refreshToken(new RefreshTokenModel(localStorage.getItem('refreshToken')))
           .pipe(

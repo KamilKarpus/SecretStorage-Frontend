@@ -1,0 +1,114 @@
+<mat-toolbar >
+    Secret<b>Storage</b> 
+    <div style="padding-left: 15px; font-size: 15px; padding-top: 4px; opacity: 0.9;">
+        <button mat-button routerLink='/main'><i class="fas fa-home"></i></button>
+        <i style="padding-left: 8px; padding-right: 8px;" class="fas fa-long-arrow-alt-right"></i>
+        <button mat-button routerLink='/organization/{{organizationId}}'><i style="padding-right: 8px;" class="fas fa-users"></i> {{organizationName}}</button>
+        <i style="padding-left: 8px; padding-right: 8px;" class="fas fa-long-arrow-alt-right"></i>
+        <button mat-button><i style="padding-right: 8px;" class="fas fa-list-alt"></i>{{collectionName}}</button>
+        <div style="float: right;" *ngIf="ifEncrypt">
+            <i style="padding-left: 8px; padding-right: 8px;" class="fas fa-long-arrow-alt-right"></i>
+            <button mat-button><i style="padding-right: 8px;" class="fas fa-lock-open"></i>{{resourceInfo.name}}</button>
+        </div>
+    </div>
+    <span class="example-fill-remaining-space"></span>
+    <span>
+        <!-- <button mat-flat-button><i style="font-size: 20px;" class="far fa-user"></i></button> -->
+        <button style="border: 1px solid #ffffff;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <i style="font-size: 20px;" class="far fa-user"></i>
+        </button>
+        <mat-menu #menu="matMenu">
+            <span><p style="margin-left: 15px; margin-right: 15px; font-size: 10px;">Zalogowano jako:</p></span>
+            <span><p style="margin-left: 15px; margin-right: 15px; text-align: center;">{{displayName}}</p></span>
+            <mat-divider></mat-divider>
+            <button (click)="logout()" style="margin-left: 15px; margin-right: 15px; margin-top: 10px;" mat-stroked-button color="warn">
+              <span>Wyloguj</span>
+            </button>
+        </mat-menu>
+    </span>
+</mat-toolbar>
+
+<div style="display: flex; margin: 40px 50px 0 50px">
+    <div style="flex: 1; width: 50%; margin-right: 50px;">
+        <mat-card style="width: 100%">
+            <div style="width: 100%; text-align: center;">
+                <p>Dodaj nowe dane:</p>
+                <mat-form-field style="width: 100%;">
+                    <input [(ngModel)]="resourceName" style="width: 100%" name="resourceName"  matInput placeholder="Nazwa:">
+                </mat-form-field>
+                <mat-form-field style="width: 100%;">
+                    <input [(ngModel)]="resourceData" style="width: 100%" name="resourceData"  matInput placeholder="Dane do szyfrowania:">
+                </mat-form-field>
+                <button (click)="newResource()" style="width: 80%;" mat-stroked-button value="Submit" type="button"><i class="fas fa-database"></i></button>
+            </div>
+            <table mat-table [dataSource]="dataSource" style="width: 100%;">
+                <ng-container matColumnDef="displayName">
+                    <th mat-header-cell *matHeaderCellDef> Nazwa zaszyfrowanych danych: </th>
+                    <td mat-cell *matCellDef="let element"><button mat-button style="width: 100%;" type="button"> {{element.name}}</button>  </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="options">
+                    <th style="width: 25%;" mat-header-cell *matHeaderCellDef> Odszyfruj: </th>
+                    <td mat-cell *matCellDef="let element"><button (click)="encryptt(organizationId, collectionId, element.id)" mat-button style="width: 100%;" type="button" ><i class="fas fa-unlock-alt"></i></button>  </td>
+                </ng-container>
+            
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+        </mat-card>        
+    </div>
+    <div style="flex: 1; width: 50%">
+        <mat-card style="width: 100%; margin-bottom: 20px; position: relative">
+            <p>Rozszyfrowane dane:</p>
+            <div *ngIf="ifEncrypt">
+                <div style="padding-bottom: 15px; text-align: center; font-size: 16px;">
+                    {{encryptedData}}
+                </div>
+                <div>
+                    Utworzone przez: {{resourceInfo.owner}}
+                    <button mat-stroked-button style="right: 12px; bottom: 12px; position: absolute;"><i class="fas fa-edit"></i></button>
+                </div>
+                
+                
+            </div>
+        </mat-card>
+        
+        <mat-card style="width: 100%">
+            <p>Historia logów:</p>
+            <table mat-table [dataSource]="dataSourceLogs" style="width: 100%;">
+        
+                <ng-container matColumnDef="accesorName">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Nazwa użytkownika: </th>
+                    <td mat-cell *matCellDef="let element"><button mat-button style="width: 100%;" type="button"> {{element.accesorName}}</button>  </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="status">
+                    <th style="width: 20%; text-align: center;" mat-header-cell *matHeaderCellDef> Status: </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button  mat-button>{{element.status}}</button> 
+                    </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="time">
+                    <th style="width: 20%; text-align: center;" mat-header-cell *matHeaderCellDef> Data: </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button  mat-button>{{element.time}}</button> 
+                    </td>
+                    </ng-container>
+            
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsLogs"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsLogs;"></tr>
+            </table>
+            
+            <mat-paginator
+                [length]="length"
+                [pageIndex]="pageIndex"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                [pageSize]="pageSize" 
+                (page)="pageEvent = handlePage($event)"
+                showFirstLastButtons
+                data-pagesize="pageSize"
+            ></mat-paginator>
+        </mat-card>        
+    </div>
+</div>

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ResponseWithID } from 'src/app/_models/response/responseWithId.model';
 import { addOrganizationModel } from 'src/app/_models/organization/addOrganization.model';
+import { EmailModel } from 'src/app/_models/user/Email.model';
+import { RoleModel } from 'src/app/_models/organization/Role.model';
 
 
 const baseURL = "api/organization";
@@ -30,25 +32,25 @@ export class OrganizationService {
     return this.http.delete(url);
   }
   
-//   public getOneOrganization<getOneOrganizationModel>(id: string){
-//     var url = environment.baseBackendUrl + baseURL+"/"+id;
-//     return this.http.get<getOneOrganizationModel>(url);
-//   }
+  public getOneOrganization<getOneOrganizationModel>(id: string){
+    var url = environment.baseBackendUrl + baseURL+"/"+id;
+    return this.http.get<getOneOrganizationModel>(url);
+  }
 
-//   public addUserToOrganization(id: string, userEmail: emailModel){
-//     var url = environment.baseBackendUrl + baseURL + "/" + id + "/users";
-//     return this.http.post(url, userEmail); 
-//   }
+  public addUserToOrganization(id: string, userEmail: EmailModel){
+    var url = environment.baseBackendUrl + baseURL + "/" + id + "/users";
+    return this.http.post(url, userEmail); 
+  }
 
-//   public changeUserRole(organizationID: string, userID: string, roleID: roleModel){
-//     var url = environment.baseBackendUrl + baseURL + "/" + organizationID + "/users/" + userID;
-//     console.log(url);
-//     return this.http.put(url, roleID);
-//   }
+  public changeUserRole(organizationID: string, userID: string, roleID: RoleModel){
+    var url = environment.baseBackendUrl + baseURL + "/" + organizationID + "/users/" + userID;
+    console.log(url);
+    return this.http.put(url, roleID);
+  }
 
-//   public deleteUser(organizationId: string, userId: string){
-//     var url = environment.baseBackendUrl + baseURL + "/" + organizationId + "/users/" + userId;
-//     console.log(url);
-//     return this.http.delete(url);
-//   }
+  public deleteUser(organizationId: string, userId: string){
+    var url = environment.baseBackendUrl + baseURL + "/" + organizationId + "/users/" + userId;
+    console.log(url);
+    return this.http.delete(url);
+  }
 }

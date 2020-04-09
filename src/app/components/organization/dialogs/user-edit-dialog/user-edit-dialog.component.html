@@ -1,0 +1,16 @@
+<p style="float: left; padding-top: 10px;">Edycja użytkownika</p>
+<button style="float: right; width: 10px !important;" [mat-dialog-close] mat-button>X</button>
+
+<div style="text-align: center;">
+    <mat-form-field style="width: 80%;">
+        <select matNativeControl required [(ngModel)]="sel">
+            <option value="1">Owner</option>
+            <option value="2">Admin</option>
+            <option value="3">User</option>
+        </select>
+    </mat-form-field>
+    <button style="width: 80%;" mat-stroked-button (click)="changeRole()">Change Role</button>
+    
+    <button  style="width: 80%; margin-top: 15px;" mat-stroked-button color="warn" (click)="deleteUser(data.userM.id, data.organizationId)">Delete user</button>
+    
+</div>

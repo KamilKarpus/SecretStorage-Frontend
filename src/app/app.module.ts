@@ -16,13 +16,24 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { FormsModule } from '@angular/forms';
+import { LoaderComponent } from './components/loader/loader.component';
+import {LoaderService} from './_services/loader/loader.service';
+import { LoaderInterceptor } from './_shared/http/loader.interceptor';
+import { OrganizationComponent } from './components/organization/organization.component';
+import { UserEditDialogComponent } from './components/organization/dialogs/user-edit-dialog/user-edit-dialog.component';
+import { CollectionComponent } from './components/collection/collection.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    MainPageComponent
+    MainPageComponent,
+    LoaderComponent,
+    OrganizationComponent,
+    UserEditDialogComponent,
+    CollectionComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +58,14 @@ import { FormsModule } from '@angular/forms';
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true
+    },
+    LoaderService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
     }
+    
   ],
   bootstrap: [AppComponent]
 })

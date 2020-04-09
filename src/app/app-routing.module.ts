@@ -4,14 +4,16 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { AuthGuardService as AuthGuard } from './_services/auth/auth-guard.service';
+import { OrganizationComponent } from './components/organization/organization.component';
+import { CollectionComponent } from './components/collection/collection.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component:LoginComponent},
   { path: 'main', component: MainPageComponent, canActivate: [AuthGuard] },
-  // { path: 'organization/:id', component: OrganizationComponent },
-  // { path: 'organization/:id/collection/:collectionId', component: CollectionComponent}
+  { path: 'organization/:id', component: OrganizationComponent },
+  { path: 'organization/:id/collection/:collectionId', component: CollectionComponent}
 ];
 
 @NgModule({
