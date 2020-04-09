@@ -5,7 +5,7 @@
         <i style="padding-left: 8px; padding-right: 8px;" class="fas fa-long-arrow-alt-right"></i>
         <button mat-button routerLink='/organization/{{organizationId}}'><i style="padding-right: 8px;" class="fas fa-users"></i> {{organizationName}}</button>
         <i style="padding-left: 8px; padding-right: 8px;" class="fas fa-long-arrow-alt-right"></i>
-        <button mat-button><i style="padding-right: 8px;" class="fas fa-list-alt"></i>{{collectionName}}</button>
+        <button mat-button (click)="refresh()"><i style="padding-right: 8px;" class="fas fa-list-alt"></i>{{collectionName}}</button>
         <div style="float: right;" *ngIf="ifEncrypt">
             <i style="padding-left: 8px; padding-right: 8px;" class="fas fa-long-arrow-alt-right"></i>
             <button mat-button><i style="padding-right: 8px;" class="fas fa-lock-open"></i>{{resourceInfo.name}}</button>
@@ -31,12 +31,13 @@
 <div style="display: flex; margin: 40px 50px 0 50px">
     <div style="flex: 1; width: 50%; margin-right: 50px;">
         <mat-card style="width: 100%">
+            <p>Dodaj nowe dane:</p>
             <div style="width: 100%; text-align: center;">
-                <p>Dodaj nowe dane:</p>
-                <mat-form-field style="width: 100%;">
+                
+                <mat-form-field style="width: 80%;">
                     <input [(ngModel)]="resourceName" style="width: 100%" name="resourceName"  matInput placeholder="Nazwa:">
                 </mat-form-field>
-                <mat-form-field style="width: 100%;">
+                <mat-form-field style="width: 80%;">
                     <input [(ngModel)]="resourceData" style="width: 100%" name="resourceData"  matInput placeholder="Dane do szyfrowania:">
                 </mat-form-field>
                 <button (click)="newResource()" style="width: 80%;" mat-stroked-button value="Submit" type="button"><i class="fas fa-database"></i></button>

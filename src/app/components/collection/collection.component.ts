@@ -15,6 +15,7 @@ import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { GetResourceLogsModel } from 'src/app/_models/collection/getResourceLogs.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceEditDialogComponent } from './resource-edit-dialog/resource-edit-dialog.component';
+import { empty } from 'rxjs';
 
 @Component({
   selector: 'app-collection',
@@ -123,6 +124,13 @@ export class CollectionComponent implements OnInit {
       this.encryptt(this.organizationId, this.collectionId, this.resourceId);
     });
     
+  }
+
+  refresh(){
+    this.encryptedData = "";
+    this.ifEncrypt = false;
+    this.dataSourceLogs = null;
+
   }
 
   logout(){
