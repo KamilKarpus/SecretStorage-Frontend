@@ -35,24 +35,7 @@ export class UserEditDialogComponent implements OnInit {
         break;
     }
   }
-  // checkIfHasOwner(role: string){
-    
-  //   var counter = 0;
-  //   this.organizationService.getOneOrganization<getOneOrganizationModel>(this.data.organizationId).subscribe(data=>{
-  //       (data.users).forEach(element => {
-  //         if(element.role=="Owner"){
-  //           counter+=1;
-  //         }
-  //       });
-  //   })
-  //   if(role=="Owner" && counter==1){
-  //     return true;
-  //   }
-  //   else return false;
-
-  
-  // }
-
+ 
   changeRole(){
     this.organizationService.changeUserRole(this.data.organizationId, this.data.userM.id, new RoleModel(parseInt(this.sel)))
     .subscribe(data=>{

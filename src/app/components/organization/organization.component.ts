@@ -13,6 +13,7 @@ import { CollectionService } from 'src/app/_services/collection/collection.servi
 import { getAllCollectionsModel } from 'src/app/_models/collection/getAllCollections.model';
 import { CollectionModel } from 'src/app/_models/collection/collection.model';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-organization',
@@ -43,7 +44,8 @@ export class OrganizationComponent implements OnInit {
   paginator: MatPaginator;
 
   constructor(public router: Router, public organizationService: OrganizationService,
-     private activatedRoute: ActivatedRoute, public dialog: MatDialog, public collectionService: CollectionService) { }
+     private activatedRoute: ActivatedRoute, public dialog: MatDialog, public collectionService: CollectionService,
+     private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.displayName = jwt_decode(localStorage.getItem('token')).displayname;
@@ -73,7 +75,6 @@ export class OrganizationComponent implements OnInit {
           this.ownerCounter+=1;
         }
       });   
-      console.log(this.ownerCounter);
     })
   }
 
@@ -85,7 +86,7 @@ export class OrganizationComponent implements OnInit {
   wyswietlID(user: UserModel){
 
     if(user.role=="Owner" && this.ownerCounter<2) {
-      console.log("nie chuja");
+      this.toastr.error('Nie możesz edytować ostatniego właściciela!', 'Błąd edycji użytkownika!');
     }
     else
       this.openDialog(user, this.id);

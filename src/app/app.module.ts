@@ -22,7 +22,8 @@ import { LoaderInterceptor } from './_shared/http/loader.interceptor';
 import { OrganizationComponent } from './components/organization/organization.component';
 import { UserEditDialogComponent } from './components/organization/dialogs/user-edit-dialog/user-edit-dialog.component';
 import { CollectionComponent } from './components/collection/collection.component';
-
+import { ResourceEditDialogComponent } from './components/collection/resource-edit-dialog/resource-edit-dialog.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { CollectionComponent } from './components/collection/collection.componen
     LoaderComponent,
     OrganizationComponent,
     UserEditDialogComponent,
-    CollectionComponent
+    CollectionComponent,
+    ResourceEditDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { CollectionComponent } from './components/collection/collection.componen
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     { 

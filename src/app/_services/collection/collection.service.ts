@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import {AddNewCollectionModel} from '../../_models/collection/addNewCollection.model';
 import { addNewResourceModel } from 'src/app/_models/collection/addNewResource.model';
+import { EditResourceModel } from 'src/app/_models/collection/editResource.model';
 const baseURL = "api/";
 
 @Injectable({
@@ -50,6 +51,12 @@ export class CollectionService {
       var url = environment.baseBackendUrl + baseURL + organizationId + "/collections/resource/" +
        resourceId + "/logs?PageNumber=" + PageNumber + "&PageSize=" + PageSize;
       return this.http.get<GetResourceLogsModel>(url);
+    }
+
+    public editResource(organizationId: string, collectionId: string, resourceId: string, resource: EditResourceModel){
+      var url = environment.baseBackendUrl + baseURL + organizationId + "/collections/" + collectionId + 
+                "/resource/" + resourceId;
+      return this.http.put(url, resource);
     }
     
 

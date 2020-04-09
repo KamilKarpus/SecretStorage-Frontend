@@ -40,9 +40,7 @@ export class MainPageComponent implements OnInit {
 
   readAllOrganizations(page: number, size: number){
     this.organizationService.getAllOrganizations<getAllOrganizationsModel>(page,size).subscribe(data=>{
-      this.getOrganization = data;
-      console.log(this.getOrganization.items);
-      
+      this.getOrganization = data; 
       this.dataSource = new MatTableDataSource<organizationModel>(this.getOrganization.items);
       this.length = this.getOrganization.totalCount;
       

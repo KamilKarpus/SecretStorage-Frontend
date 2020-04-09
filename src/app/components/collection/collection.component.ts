@@ -13,6 +13,8 @@ import { GetResourceInfoModel } from 'src/app/_models/collection/getResourceInfo
 import { LogModel } from 'src/app/_models/collection/log.model';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { GetResourceLogsModel } from 'src/app/_models/collection/getResourceLogs.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ResourceEditDialogComponent } from './resource-edit-dialog/resource-edit-dialog.component';
 
 @Component({
   selector: 'app-collection',
@@ -24,11 +26,13 @@ export class CollectionComponent implements OnInit {
   displayName: string;
   organizationId: string;
   collectionId: string;
+  resourceId: string;
   organizationName: string;
   collectionName: string;
 
   resourceName: string;
   resourceData: string;
+
 
   displayedColumns: string[] = ['displayName', 'options'];
   dataSource: MatTableDataSource<resourceModel>;
@@ -47,7 +51,7 @@ export class CollectionComponent implements OnInit {
   paginator: MatPaginator;
 
   constructor(public router: Router, private activatedRoute: ActivatedRoute, public collectionService: CollectionService,
-    public organizationService: OrganizationService) { }
+    public organizationService: OrganizationService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.displayName = jwt_decode(localStorage.getItem('token')).displayname;
@@ -79,6 +83,7 @@ export class CollectionComponent implements OnInit {
     this.collectionService.getResourceInfo<GetResourceInfoModel>(organizationId, collectionId, resourceId)
     .subscribe(data=>{
       this.resourceInfo = data;
+      this.resourceId = data.id;
       this.ifEncrypt = true;
       this.getResourceLogs(1,5, this.organizationId, this.resourceInfo.id);
     })
@@ -103,6 +108,21 @@ export class CollectionComponent implements OnInit {
   handlePage(event?:PageEvent){
     this.getResourceLogs(event.pageIndex+1, event.pageSize, this.organizationId, this.resourceInfo.id);
     return event;
+  }
+
+  editResource(){
+    this.openDialog(this.organizationId, this.collectionId, this.resourceId, this.encryptedData);
+  }
+
+  openDialog(organizationId: string, collectionId: string, resourceId: string, resource: string): void {
+    const dialogRef = this.dialog.open(ResourceEditDialogComponent, {
+      width: '250px',
+      data: {organizationId: organizationId, collectionId: collectionId, resourceId: resourceId, resource: resource}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.encryptt(this.organizationId, this.collectionId, this.resourceId);
+    });
+    
   }
 
   logout(){
