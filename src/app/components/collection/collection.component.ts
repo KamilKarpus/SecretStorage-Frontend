@@ -16,6 +16,8 @@ import { GetResourceLogsModel } from 'src/app/_models/collection/getResourceLogs
 import { MatDialog } from '@angular/material/dialog';
 import { ResourceEditDialogComponent } from './resource-edit-dialog/resource-edit-dialog.component';
 import { empty } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { ResourceDeleteDialogComponent } from './resource-delete-dialog/resource-delete-dialog.component';
 
 @Component({
   selector: 'app-collection',
@@ -54,7 +56,8 @@ export class CollectionComponent implements OnInit {
   ifCanEdit: boolean = true;
 
   constructor(public router: Router, private activatedRoute: ActivatedRoute, public collectionService: CollectionService,
-    public organizationService: OrganizationService, public dialog: MatDialog) { }
+    public organizationService: OrganizationService, public dialog: MatDialog,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.displayName = jwt_decode(localStorage.getItem('token')).displayname;
@@ -69,7 +72,10 @@ export class CollectionComponent implements OnInit {
   newResource(){
     this.collectionService.addNewResource(this.organizationId, this.collectionId, new addNewResourceModel(this.resourceName,this.resourceData))
     .subscribe(data=>{
+      this.toastr.success('Dodałeś nowe szyfrowane dane!', 'Sukces!');
       this.getResources();
+      this.resourceName="";
+      this.resourceData="";
     })
   }
 
@@ -119,11 +125,24 @@ export class CollectionComponent implements OnInit {
   }
 
   deleteResource(){
-    this.collectionService.deleteResource(this.organizationId, this.collectionId, this.resourceId).subscribe(data=>{
-      this.encryptedData = "";
-      this.ifEncrypt = false;
-      this.getResources();
-    })
+    this.openDialogDelete();
+  }
+
+  openDialogDelete(): void {
+    const dialogRef = this.dialog.open(ResourceDeleteDialogComponent, {
+      width: '250px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.collectionService.deleteResource(this.organizationId, this.collectionId, this.resourceId).subscribe(data=>{
+          this.encryptedData = "";
+          this.ifEncrypt = false;
+          this.getResources();
+          this.toastr.info("Usunięto szyfrowane dane")
+          this.dataSourceLogs = null;
+        })
+      }
+    });
   }
 
   openDialog(organizationId: string, collectionId: string, resourceId: string, resource: string): void {

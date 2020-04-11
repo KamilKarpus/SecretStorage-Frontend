@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CollectionService } from 'src/app/_services/collection/collection.service';
 import { EditResourceModel } from 'src/app/_models/collection/editResource.model';
+import { ToastrService } from 'ngx-toastr';
 
 export interface DialogData {
   organizationId: string;
@@ -21,7 +22,8 @@ export class ResourceEditDialogComponent implements OnInit {
   newResource: string = this.oldResource;
 
   constructor(public dialogRef: MatDialogRef<ResourceEditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData, public collectionService: CollectionService) { }
+    @Inject(MAT_DIALOG_DATA) public data: DialogData, public collectionService: CollectionService,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
@@ -29,6 +31,7 @@ export class ResourceEditDialogComponent implements OnInit {
   editResource(){
     this.collectionService.editResource(this.data.organizationId, this.data.collectionId, this.data.resourceId,
        new EditResourceModel(this.newResource)).subscribe(data=>{
+         this.toastr.info("Dane pomyślnie zedytowane");
         this.dialogRef.close();
       })
   }
