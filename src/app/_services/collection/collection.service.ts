@@ -59,5 +59,15 @@ export class CollectionService {
       return this.http.put(url, resource);
     }
     
+    public deleteCollection(organizationId: string,  collectionId: string){
+      var url = environment.baseBackendUrl + baseURL + organizationId + "/collections/" + collectionId;
+      return this.http.delete(url);
+    }
+
+    public deleteResource(organizationId: string, collectionId: string, resourceId: string){
+      var url = environment.baseBackendUrl + baseURL + organizationId + "/collections/" + collectionId + 
+                "/resourse/" + resourceId;
+      return this.http.delete(url);
+    }
 
 }

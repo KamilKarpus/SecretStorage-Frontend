@@ -31,8 +31,10 @@
 <div style="display: flex; margin: 40px 50px 0 50px">
     <div style="flex: 1; width: 50%; margin-right: 50px;">
         <mat-card style="width: 100%">
-            <p>Dodaj nowe dane:</p>
-            <div style="width: 100%; text-align: center;">
+
+            <div *ngIf="!ifCanEdit">
+                <p>Dodaj nowe dane:</p>
+                <div style="width: 100%; text-align: center;">
                 
                 <mat-form-field style="width: 80%;">
                     <input [(ngModel)]="resourceName" style="width: 100%" name="resourceName"  matInput placeholder="Nazwa:">
@@ -41,7 +43,9 @@
                     <input [(ngModel)]="resourceData" style="width: 100%" name="resourceData"  matInput placeholder="Dane do szyfrowania:">
                 </mat-form-field>
                 <button (click)="newResource()" style="width: 80%;" mat-stroked-button value="Submit" type="button"><i class="fas fa-database"></i></button>
+                </div>
             </div>
+            
             <table mat-table [dataSource]="dataSource" style="width: 100%;">
                 <ng-container matColumnDef="displayName">
                     <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Nazwa zaszyfrowanych danych: </th>
@@ -67,7 +71,11 @@
                 </div>
                 <div>
                     Utworzone przez: {{resourceInfo.owner}}
-                    <button (click)="editResource()" mat-stroked-button style="right: 12px; bottom: 12px; position: absolute;"><i class="fas fa-edit"></i></button>
+                    <div style="right: 12px; bottom: 12px; position: absolute;">
+                        <button [disabled]="ifCanEdit" (click)="editResource()" mat-stroked-button ><i class="fas fa-edit"></i></button>
+                        <button style="margin-left: 6px;" [disabled]="ifCanEdit" (click)="deleteResource()" mat-stroked-button><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    
                 </div>
                 
                 

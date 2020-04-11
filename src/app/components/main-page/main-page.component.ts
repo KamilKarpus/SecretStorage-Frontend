@@ -62,8 +62,8 @@ export class MainPageComponent implements OnInit {
   }
 
   canDelete(orgID: string){
-    // const orgid = jwt_decode(localStorage.getItem('token'))[orgID];
-    // return !orgid.includes("CanEditOrganization");
+    const orgid = jwt_decode(localStorage.getItem('token'))[orgID];
+    return !orgid.includes("CanEditOrganization");
   }
 
   deleteOrg(id: string){

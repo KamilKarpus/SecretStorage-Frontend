@@ -83,6 +83,11 @@ export class OrganizationComponent implements OnInit {
     return !orgid.includes("CanEditOrganization");
   }
 
+  canEditCollection(orgID: string){
+    const orgid = jwt_decode(localStorage.getItem('token'))[orgID];
+    return !orgid.includes("CanEditCollection");
+  }
+
   wyswietlID(user: UserModel){
 
     if(user.role=="Owner" && this.ownerCounter<2) {
@@ -119,6 +124,12 @@ export class OrganizationComponent implements OnInit {
   handlePage(event?:PageEvent){
     this.getAllCollections(event.pageIndex+1, event.pageSize, this.id);
     return event;
+  }
+
+  deleteCollection(organizationId: string, collectionId: string){
+    this.collectionService.deleteCollection(organizationId, collectionId).subscribe(data=>{
+      this.getAllCollections(this.paginator.pageIndex+1, this.paginator.pageSize, this.id);
+    });
   }
 
   logout(){

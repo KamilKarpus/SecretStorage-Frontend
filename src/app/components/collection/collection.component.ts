@@ -51,6 +51,8 @@ export class CollectionComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true})
   paginator: MatPaginator;
 
+  ifCanEdit: boolean = true;
+
   constructor(public router: Router, private activatedRoute: ActivatedRoute, public collectionService: CollectionService,
     public organizationService: OrganizationService, public dialog: MatDialog) { }
 
@@ -61,6 +63,7 @@ export class CollectionComponent implements OnInit {
 
     this.getResources();
     this.getOrganization(this.organizationId);
+    this.canEditCollection(this.organizationId);
   }
 
   newResource(){
@@ -115,6 +118,14 @@ export class CollectionComponent implements OnInit {
     this.openDialog(this.organizationId, this.collectionId, this.resourceId, this.encryptedData);
   }
 
+  deleteResource(){
+    this.collectionService.deleteResource(this.organizationId, this.collectionId, this.resourceId).subscribe(data=>{
+      this.encryptedData = "";
+      this.ifEncrypt = false;
+      this.getResources();
+    })
+  }
+
   openDialog(organizationId: string, collectionId: string, resourceId: string, resource: string): void {
     const dialogRef = this.dialog.open(ResourceEditDialogComponent, {
       width: '250px',
@@ -124,6 +135,11 @@ export class CollectionComponent implements OnInit {
       this.encryptt(this.organizationId, this.collectionId, this.resourceId);
     });
     
+  }
+
+  canEditCollection(orgID: string){
+    const orgid = jwt_decode(localStorage.getItem('token'))[orgID];
+    this.ifCanEdit = !orgid.includes("CanEditCollection");
   }
 
   refresh(){
