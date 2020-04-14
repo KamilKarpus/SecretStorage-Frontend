@@ -14,6 +14,7 @@ import { getAllCollectionsModel } from 'src/app/_models/collection/getAllCollect
 import { CollectionModel } from 'src/app/_models/collection/collection.model';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
+import { CollectionDeleteDialogComponent } from './dialogs/collection-delete-dialog/collection-delete-dialog.component';
 
 @Component({
   selector: 'app-organization',
@@ -26,13 +27,13 @@ export class OrganizationComponent implements OnInit {
   id: string;
   organizationName: string;
 
-  userEmail: string;
+  userEmail: string="";
   ownerCounter: number;
 
   displayedColumns: string[] = ['displayName', 'role'];
   public dataSource: MatTableDataSource<UserModel>;
   
-  collectionName: string;
+  collectionName: string="";
 
   length:number;
   displayedColumnsColl: string[] = ['organization', 'options'];
@@ -42,6 +43,9 @@ export class OrganizationComponent implements OnInit {
   pageSize: number;
   @ViewChild(MatPaginator, {static: true})
   paginator: MatPaginator;
+
+  organizationId: string;
+  collectionId: string;
 
   constructor(public router: Router, public organizationService: OrganizationService,
      private activatedRoute: ActivatedRoute, public dialog: MatDialog, public collectionService: CollectionService,
@@ -55,10 +59,23 @@ export class OrganizationComponent implements OnInit {
     this.getAllCollections(1, 5, this.id);
   }
 
+  validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
   addNewUser(id: string, email: EmailModel){
-    this.organizationService.addUserToOrganization(id, email).subscribe(data=>{
-      this.getOrganization(this.id);
-    })
+    if(!this.validateEmail(this.userEmail)){
+      this.toastr.warning("Błędnie sformatowany adres email!");
+    }
+    else {
+      this.organizationService.addUserToOrganization(id, email).subscribe(data=>{
+        this.getOrganization(this.id);
+        this.toastr.success('Sukces!', 'Dodałeś nowego użytkownika!');
+        this.userEmail="";
+      })
+    }
+    
   }
 
   newUser(){
@@ -108,10 +125,20 @@ export class OrganizationComponent implements OnInit {
     
   }
 
+  
+
   newCollection(){
-    this.collectionService.addNewCollection(this.id, new AddNewCollectionModel(this.collectionName)).subscribe(data=>{
-      this.getAllCollections(this.paginator.pageIndex+1, this.paginator.pageSize, this.id);
-    })
+    if(this.collectionName.length<3){
+      this.toastr.warning("Nazwa kolekcji musi składać się z minimum 3 znaków!");
+    }
+    else {
+      this.collectionService.addNewCollection(this.id, new AddNewCollectionModel(this.collectionName)).subscribe(data=>{
+        this.getAllCollections(this.paginator.pageIndex+1, this.paginator.pageSize, this.id);
+        this.toastr.success('Sukces!', 'Dodałeś nową kolekcję!');
+        this.collectionName="";
+      })
+    }
+    
   }
 
   getAllCollections(currentPage: number, pageSize: number, organizationId: string){
@@ -127,8 +154,22 @@ export class OrganizationComponent implements OnInit {
   }
 
   deleteCollection(organizationId: string, collectionId: string){
-    this.collectionService.deleteCollection(organizationId, collectionId).subscribe(data=>{
-      this.getAllCollections(this.paginator.pageIndex+1, this.paginator.pageSize, this.id);
+    this.openDialogConfirm();
+    this.organizationId = organizationId;
+    this.collectionId = collectionId;
+  }
+
+  openDialogConfirm(): void {
+    const dialogRef = this.dialog.open(CollectionDeleteDialogComponent, {
+      width: '250px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.collectionService.deleteCollection(this.organizationId, this.collectionId).subscribe(data=>{
+          this.getAllCollections(this.paginator.pageIndex+1, this.paginator.pageSize, this.id);
+          this.toastr.info("Usunięto kolekcję", "Informacja!");
+        });
+      }
     });
   }
 

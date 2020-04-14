@@ -24,6 +24,11 @@ import { UserEditDialogComponent } from './components/organization/dialogs/user-
 import { CollectionComponent } from './components/collection/collection.component';
 import { ResourceEditDialogComponent } from './components/collection/resource-edit-dialog/resource-edit-dialog.component';
 import { ToastrModule } from 'ngx-toastr';
+import { ConfirmDialogComponent } from './components/main-page/dialogs/confirm-dialog/confirm-dialog.component';
+import { CollectionDeleteDialogComponent } from './components/organization/dialogs/collection-delete-dialog/collection-delete-dialog.component';
+import { ResourceDeleteDialogComponent } from './components/collection/resource-delete-dialog/resource-delete-dialog.component';
+import { Error400Interceptor } from './_shared/http/error400.interceptor';
+import {ValidationErrorInterceptor} from './_shared/http/validationError.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,7 +40,10 @@ import { ToastrModule } from 'ngx-toastr';
     OrganizationComponent,
     UserEditDialogComponent,
     CollectionComponent,
-    ResourceEditDialogComponent
+    ResourceEditDialogComponent,
+    ConfirmDialogComponent,
+    CollectionDeleteDialogComponent,
+    ResourceDeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +75,12 @@ import { ToastrModule } from 'ngx-toastr';
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptor,
       multi: true
-    }
+    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: ValidationErrorInterceptor,
+    //   multi: true
+    // }
     
   ],
   bootstrap: [AppComponent]

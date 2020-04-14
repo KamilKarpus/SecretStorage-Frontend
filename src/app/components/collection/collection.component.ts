@@ -33,8 +33,8 @@ export class CollectionComponent implements OnInit {
   organizationName: string;
   collectionName: string;
 
-  resourceName: string;
-  resourceData: string;
+  resourceName: string="";
+  resourceData: string="";
 
 
   displayedColumns: string[] = ['displayName', 'options'];
@@ -70,13 +70,19 @@ export class CollectionComponent implements OnInit {
   }
 
   newResource(){
-    this.collectionService.addNewResource(this.organizationId, this.collectionId, new addNewResourceModel(this.resourceName,this.resourceData))
-    .subscribe(data=>{
+    if(this.resourceName.length<3|| this.resourceData.length<3){
+      this.toastr.warning("Nazwa danych oraz same dane musz skłądać się z minimum 3 znaków!");
+    }
+    else {
+      this.collectionService.addNewResource(this.organizationId, this.collectionId, new addNewResourceModel(this.resourceName,this.resourceData))
+      .subscribe(data=>{
       this.toastr.success('Dodałeś nowe szyfrowane dane!', 'Sukces!');
       this.getResources();
       this.resourceName="";
       this.resourceData="";
     })
+    }
+    
   }
 
   getResources(){

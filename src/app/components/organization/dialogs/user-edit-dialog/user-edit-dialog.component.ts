@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserModel } from 'src/app/_models/user/User.model';
 import { RoleModel } from 'src/app/_models/organization/Role.model';
 import { getOneOrganizationModel } from 'src/app/_models/organization/getOneOrganization.model';
+import { ToastrService } from 'ngx-toastr';
 
 export interface DialogData {
   userM: UserModel;
@@ -20,7 +21,8 @@ export class UserEditDialogComponent implements OnInit {
   sel: string;
   role: string = this.data.userM.role.toString();
   constructor(public dialogRef: MatDialogRef<UserEditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,  public organizationService: OrganizationService) { }
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,  public organizationService: OrganizationService,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
     switch(this.role){
@@ -39,11 +41,13 @@ export class UserEditDialogComponent implements OnInit {
   changeRole(){
     this.organizationService.changeUserRole(this.data.organizationId, this.data.userM.id, new RoleModel(parseInt(this.sel)))
     .subscribe(data=>{
+      this.toastr.info("Zmieniono role użytkownika", "Informacja!");
     })
   }
 
   deleteUser(userId: string, organizationId: string) {
     this.organizationService.deleteUser(organizationId, userId).subscribe(data=>{
+      this.toastr.info("Usunięto użytkownika", "Informacja!");
     })
   }
 }

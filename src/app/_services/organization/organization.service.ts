@@ -6,6 +6,7 @@ import { ResponseWithID } from 'src/app/_models/response/responseWithId.model';
 import { addOrganizationModel } from 'src/app/_models/organization/addOrganization.model';
 import { EmailModel } from 'src/app/_models/user/Email.model';
 import { RoleModel } from 'src/app/_models/organization/Role.model';
+import { ResponseWithErrorModel } from 'src/app/_models/response/responseWithError.model';
 
 
 const baseURL = "api/organization";
@@ -17,9 +18,9 @@ export class OrganizationService {
 
   constructor(private http: HttpClient) { }
 
-  public addOrganization(addOrganization: addOrganizationModel):Observable<ResponseWithID> {
+  public addOrganization(addOrganization: addOrganizationModel):Observable<ResponseWithErrorModel> {
     var url = environment.baseBackendUrl + baseURL;
-    return this.http.post<ResponseWithID>(url, addOrganization);
+    return this.http.post<ResponseWithErrorModel>(url, addOrganization);
   }
 
   public getAllOrganizations<getAllOrganizationsModel>(currentPage:number, pageSize: number){
@@ -45,6 +46,8 @@ export class OrganizationService {
   public changeUserRole(organizationID: string, userID: string, roleID: RoleModel){
     var url = environment.baseBackendUrl + baseURL + "/" + organizationID + "/users/" + userID;
     console.log(url);
+    console.log(organizationID);
+    console.log(userID);
     return this.http.put(url, roleID);
   }
 

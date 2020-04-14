@@ -7,6 +7,12 @@ import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { OrganizationService } from 'src/app/_services/organization/organization.service';
 import { getAllOrganizationsModel } from 'src/app/_models/organization/getAllOrganization.model';
 import { addOrganizationModel } from 'src/app/_models/organization/addOrganization.model';
+import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { UserService } from 'src/app/_services/user/user.service';
+import { RefreshTokenModel } from 'src/app/_models/user/RefreshToken.model';
+import { responseWithRefreshTokenModel } from 'src/app/_models/response/responseWithRefreshToken.model';
 
 @Component({
   selector: 'app-main-page',
@@ -17,7 +23,7 @@ export class MainPageComponent implements OnInit {
 
   displayName: string;
 
-  organizationName: string;
+  organizationName: string="";
 
   getOrganization: getAllOrganizationsModel;
   displayedColumns: string[] = ['organization', 'options'];
@@ -29,8 +35,11 @@ export class MainPageComponent implements OnInit {
   length:number;
   @ViewChild(MatPaginator, {static: true})
   paginator: MatPaginator;
+
+  id: string;
   
-  constructor(public router: Router, public organizationService: OrganizationService) { }
+  constructor(public router: Router, public organizationService: OrganizationService, private toastr: ToastrService,
+    public dialog: MatDialog, public userService: UserService) { }
 
   ngOnInit(): void {
     this.displayName = jwt_decode(localStorage.getItem('token')).displayname;
@@ -54,11 +63,27 @@ export class MainPageComponent implements OnInit {
 
 
   addNewOrganization(){
-    this.organizationService.addOrganization(new addOrganizationModel(this.organizationName))
-    .subscribe(data=>{
-      this.length+=1;
-      this.readAllOrganizations(this.paginator.pageIndex+1, this.paginator.pageSize);
-    })
+
+    if(this.organizationName.length>=3){
+      this.organizationService.addOrganization(new addOrganizationModel(this.organizationName))
+      .subscribe(data=>{
+        
+        this.toastr.success('Sukces!', 'Dodałeś nową organizację!');
+        this.length+=1;
+        this.userService.refreshToken(new RefreshTokenModel(localStorage.getItem('refreshToken')))
+        .subscribe(data=>{
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('refreshToken', data.refreshToken); 
+        })
+        this.readAllOrganizations(this.paginator.pageIndex+1, this.paginator.pageSize);
+        this.organizationName="";
+      })
+    }
+
+    else {
+      this.toastr.warning("Nazwa organizacji musi składać się z minimum 3 znaków!");
+    }
+    
   }
 
   canDelete(orgID: string){
@@ -67,8 +92,22 @@ export class MainPageComponent implements OnInit {
   }
 
   deleteOrg(id: string){
-    this.organizationService.deleteOrganization(id).subscribe(data=>{
-      this.readAllOrganizations(this.paginator.pageIndex+1, this.paginator.pageSize);
+    this.id = id;
+    this.openDialog();
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '250px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        console.log('Yes clicked');
+        this.organizationService.deleteOrganization(this.id).subscribe(data=>{
+          this.readAllOrganizations(this.paginator.pageIndex+1, this.paginator.pageSize);
+          this.toastr.info('Usunięto organizację!');
+        });
+      }
     });
   }
 

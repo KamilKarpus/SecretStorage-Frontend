@@ -32,13 +32,12 @@ export class LoginComponent implements OnInit {
     this.userService.loginUser(new UserLogin(this.email, this.password)).subscribe(data=>{
       localStorage.setItem('token', data.token);
       localStorage.setItem('refreshToken', data.refreshToken);
-      console.log(localStorage.getItem('refreshToken'));
       if(data!=null){
         this.router.navigate(['/main']);
       }
     },
     error=>{this.errorMsg = error.message; console.log(this.errorMsg);
-      this.snackBar.open(this.errorMsg, this.action ? this.actionButtonLabel : undefined, {duration:3000, panelClass: ['snack-bar']});
+      //this.snackBar.open(this.errorMsg, this.action ? this.actionButtonLabel : undefined, {duration:3000, panelClass: ['snack-bar']});
     }
     )
     

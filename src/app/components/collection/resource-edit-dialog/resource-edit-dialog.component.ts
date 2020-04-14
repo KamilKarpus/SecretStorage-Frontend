@@ -29,11 +29,17 @@ export class ResourceEditDialogComponent implements OnInit {
   }
 
   editResource(){
-    this.collectionService.editResource(this.data.organizationId, this.data.collectionId, this.data.resourceId,
-       new EditResourceModel(this.newResource)).subscribe(data=>{
-         this.toastr.info("Dane pomyślnie zedytowane");
-        this.dialogRef.close();
+    if(this.newResource.length<3){
+      this.toastr.warning("Dane musz składać się z minimum 3 znaków!");
+    }
+    else {
+      this.collectionService.editResource(this.data.organizationId, this.data.collectionId, this.data.resourceId,
+        new EditResourceModel(this.newResource)).subscribe(data=>{
+          this.toastr.info("Dane pomyślnie zedytowane");
+         this.dialogRef.close();
       })
+    }
+    
   }
 
 }
